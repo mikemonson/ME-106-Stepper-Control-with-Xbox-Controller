@@ -74,43 +74,44 @@
 
 // Include application, user and local libraries
 #include <XBOXRECV.h>
+#include "Xbox_Stepper_Functions.h"
 
 // Define structures and classes
+//Stepper Motor Constructors
 
 
 // Define variables and constants
 
 
-#define xDir 5
-#define yDir 6
-#define zDir 7
+#define xDirPin 5
+#define yDirPin 6
+#define zDirPin 7
 
-#define xPulse 2
-#define yPulse  3
-#define zPulse 4
+#define xPulsePin 2
+#define yPulsePin  3
+#define zPulsePin 4
 
 
 #define stepperEnable = 8
+
+
 
 int speed = 600;
 int count = 0;
 bool FLAG = true;
 
+// Prototypes
 
 USB Usb;
 XBOXRECV Xbox(&Usb);
 
-// Prototypes
-
+Stepper X_Motor(xPulsePin,xDirPin);
+Stepper Y_Motor(yPulsePin,yDirPin);
+Stepper Z_Motor(zPulsePin,zDirPin);
 
 // Add setup code
 void setup()
 {
-//initalize pins for stepper motors
-    for (int i = 2 ; i <= 8; i++) {
-        pinMode(i, OUTPUT);
-    }
-    
 //XBOX CONTROLLER SETUP
     Serial.begin(115200);
 #if !defined(__MIPSEL__)
@@ -124,13 +125,13 @@ void setup()
     
 
 
+
 }
 
 // Add loop code
 void loop()
 {
     Usb.Task();
-    
     
     if (FLAG && Xbox.Xbox360Connected[0]) {
         Xbox.setAllOff();
@@ -162,53 +163,43 @@ void loop()
             Serial.println("Speed Increased...");
         }
 
-        //move barrel up
+        //move up
         if (Xbox.getButtonPress(UP)) {
-            digitalWrite(yDir, HIGH);
-            digitalWrite(yPulse, HIGH);
-            delayMicroseconds(speed);
-            digitalWrite(yPulse, LOW);
+            
+            Y_Motor.moveForward(speed);
             Serial.println(" Up..");
         }
     
     
-        //move barrel down
+        //move down
         if (Xbox.getButtonPress(DOWN)) {
-            digitalWrite(yDir, LOW);
-            digitalWrite(yPulse, HIGH);
-            delayMicroseconds(speed);
-            digitalWrite(yPulse, LOW);
+            Y_Motor.moveBackward(speed);
             Serial.println(" Down...");
 
             
         }
-        //move barrel left
+        //move left
         if (Xbox.getButtonPress(LEFT)) {
-            digitalWrite(xDir, HIGH);
-            digitalWrite(xPulse, HIGH);
-            delayMicroseconds(speed);
-            digitalWrite(xPulse, LOW);
+            X_Motor.moveForward(speed);
             Serial.println(" Left...");
 
             
         }
-        //move barrel right
+        //move right
         if (Xbox.getButtonPress(RIGHT)) {
-            digitalWrite(xDir, LOW);
-            digitalWrite(xPulse, HIGH);
-            delayMicroseconds(speed);
-            digitalWrite(xPulse, LOW);
+            X_Motor.moveBackward(speed);
             Serial.println(" Right...");
 
             
         }
-    
-    if (Xbox.getButtonClick(A)) {
-        digitalWrite(zPulse, HIGH);
-        delayMicroseconds(700);
-        digitalWrite(zPulse, LOW);
-        Serial.println("Toggle...");
-
+    //z up
+    if (Xbox.getButtonPress(Y)) {
+        Z_Motor.moveForward(speed);
+        Serial.println("Z up...");
+    }
+    if (Xbox.getButtonPress(A)) {
+        Z_Motor.moveBackward(speed);
+        Serial.println("Z Down...");
     }
     
     }
