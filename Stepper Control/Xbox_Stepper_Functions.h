@@ -58,10 +58,13 @@ public:
     Stepper(int motorPin, int dirPin);
     void moveForward(int motorSpeed);
     void moveBackward(int motorSpeed);
+    void moveSteps(long numSteps, int motorSpeed);
+    long returnPostion();
 
 private:
     int _motorPin;
     int _dirPin;
+    long _position;
 };
 
 

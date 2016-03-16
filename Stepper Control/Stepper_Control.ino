@@ -83,20 +83,20 @@
 // Define variables and constants
 
 
-#define xDirPin 5
-#define yDirPin 6
-#define zDirPin 7
+#define xDirPin 2
+#define yDirPin 4
+#define zDirPin 6
 
-#define xPulsePin 2
-#define yPulsePin  3
-#define zPulsePin 4
+#define xPulsePin 3
+#define yPulsePin  5
+#define zPulsePin 7
 
 
 #define stepperEnable = 8
 
 
 
-int speed = 600;
+long speed = 200 ;
 int count = 0;
 bool FLAG = true;
 
@@ -120,8 +120,7 @@ void setup()
     if (Usb.Init() == -1) {
         Serial.print(F("\r\nOSC did not start"));
         while (1); //halt
-    }
-    Serial.print(F("\r\nXbox Wireless Receiver Library Started"));
+    }    Serial.print(F("\r\nXbox Wireless Receiver Library Started"));
     
 
 
@@ -150,59 +149,72 @@ void loop()
         FLAG = false;
         Serial.print(F("\nController Connected!\n"));
     }
-        
+    
         //decrease stepper speed
-        if (Xbox.getButtonPress(L)) {
-            speed += 1;
-            Serial.println("Speed Decreased...");
+        if (Xbox.getButtonClick(BACK)) {
+            speed = speed + 10;
+            Serial.println(speed);
         }
         
         //increase stepper speed
-        if (Xbox.getButtonPress(R)) {
-            speed -= 1;
-            Serial.println("Speed Increased...");
+        if (Xbox.getButtonClick(START)) {
+            speed = speed - 10;
+            Serial.println(speed);
         }
 
-        //move up
-        if (Xbox.getButtonPress(UP)) {
-            
-            Y_Motor.moveForward(speed);
-            Serial.println(" Up..");
-        }
+//        //move up
+//        if (Xbox.getButtonPress(UP)) {
+//            
+//            Y_Motor.moveForward(speed);
+//            Serial.println(" Up..");
+//        }
+//    
+//    
+//        //move down
+//        if (Xbox.getButtonPress(DOWN)) {
+//            Y_Motor.moveBackward(speed);
+//            Serial.println(" Down...");
+//
+//            
+//        }
+//        //move left
+//        if (Xbox.getButtonPress(LEFT)) {
+//            X_Motor.moveForward(speed);
+//            Serial.println(" Left...");
+//
+//            
+//        }
+//        //move right
+//        if (Xbox.getButtonPress(RIGHT)) {
+//            X_Motor.moveBackward(speed);
+//            Serial.println(" Right...");
+//
+//}
+//    //z up
+    if (Xbox.getButtonPress(X)) {
+        X_Motor.moveForward(speed);
+        Serial.println("Counter ClockWise");
+    }
+    if (Xbox.getButtonPress(B)) {
+        X_Motor.moveBackward(speed);
+        Serial.println("ClockWise...");
+    }
     
-    
-        //move down
-        if (Xbox.getButtonPress(DOWN)) {
-            Y_Motor.moveBackward(speed);
-            Serial.println(" Down...");
-
-            
-        }
-        //move left
-        if (Xbox.getButtonPress(LEFT)) {
-            X_Motor.moveForward(speed);
-            Serial.println(" Left...");
-
-            
-        }
-        //move right
-        if (Xbox.getButtonPress(RIGHT)) {
-            X_Motor.moveBackward(speed);
-            Serial.println(" Right...");
-
-            
-        }
-    //z up
     if (Xbox.getButtonPress(Y)) {
-        Z_Motor.moveForward(speed);
-        Serial.println("Z up...");
-    }
-    if (Xbox.getButtonPress(A)) {
-        Z_Motor.moveBackward(speed);
-        Serial.println("Z Down...");
+
+        analogWrite(3, speed);
+        
+
     }
     
+    if (Xbox.getButtonPress(LEFT)) {
+        Serial.println(X_Motor.returnPostion());
+        analogWrite(3, LOW);
+
+        
     }
+    
+}
 
     
 

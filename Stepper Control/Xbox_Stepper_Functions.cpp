@@ -25,18 +25,44 @@
     pinMode(dirPin, OUTPUT);
     _motorPin=motorPin;
     _dirPin=dirPin;
+    _position = 0;
 }
 void Stepper::moveForward(int motorSpeed)
-{
-    digitalWrite(_dirPin, HIGH);
-    digitalWrite(_motorPin, HIGH);
+{   noInterrupts();
+    PORTD = B00001100;
     delayMicroseconds(motorSpeed);
-    digitalWrite(_motorPin, LOW);
+    PORTD = B00000100;
+    _position++;
+    interrupts();
+    
+    
 }
 
 void Stepper::moveBackward(int motorSpeed) {
-    digitalWrite(_dirPin, LOW);
-    digitalWrite(_motorPin, HIGH);
+    noInterrupts();
+    PORTD = B00001000;
     delayMicroseconds(motorSpeed);
-    digitalWrite(_motorPin, LOW);
+    PORTD = B00000000;
+    _position--;
+    interrupts();
+
+
+}
+
+void Stepper::moveSteps(long numSteps, int motorSpeed) {
+    for (long i = 0 ; i < numSteps; i++) {
+        
+        noInterrupts();
+        digitalWrite(_dirPin, HIGH);
+        digitalWrite(_motorPin, HIGH);
+        delayMicroseconds(motorSpeed);
+        digitalWrite(_motorPin, LOW);
+        delayMicroseconds(motorSpeed);
+        _position++;
+        interrupts();
+    }
+}
+
+long Stepper::returnPostion() {
+    return _position;
 }
