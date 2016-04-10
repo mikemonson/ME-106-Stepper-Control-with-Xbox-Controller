@@ -34,7 +34,7 @@ APP_LIBS_LIST = 0
 # USER = Audio Firmata Servo SevSeg-master 
 #	USB_Host_Shield_2.0-master USBHost 
 #
-USER_LIBS_LIST = USB_Host_Shield_2.0-master
+USER_LIBS_LIST = USB_Host_Shield_Library_2.0
 
 # List local libraries here
 # default = empty = all
@@ -147,6 +147,38 @@ MAKEFILE_PATH  = $(CURRENT_DIR)/Makefiles
 UTILITIES_PATH = $(CURRENT_DIR)/Utilities
 
 include $(MAKEFILE_PATH)/Step1.mk
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

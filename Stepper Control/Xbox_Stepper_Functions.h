@@ -60,11 +60,19 @@ public:
     void moveBackward(int motorSpeed);
     void moveSteps(long numSteps, int motorSpeed);
     long returnPostion();
+    void setUpperBound();
+    void clearUpperBound();
+    long returnUpperBound();
+    void setLowerBound();
+    void clearLowerBound();
+    long returnLowerBound();
 
 private:
     int _motorPin;
     int _dirPin;
     long _position;
+    long _upperStopBound;
+    long _lowerStopBound;
 };
 
 

@@ -26,28 +26,38 @@
     _motorPin=motorPin;
     _dirPin=dirPin;
     _position = 0;
+    _lowerStopBound = -99999999999999999;
+    _upperStopBound = 99999999999999999;
 }
 void Stepper::moveForward(int motorSpeed)
-{   noInterrupts();
-    PORTD = B00001100;
-    delayMicroseconds(motorSpeed);
-    PORTD = B00000100;
-    _position++;
-    interrupts();
-    
-    
-}
-
-void Stepper::moveBackward(int motorSpeed) {
+{
     noInterrupts();
-    PORTD = B00001000;
+    digitalWrite(_dirPin, HIGH);
+    digitalWrite(_motorPin, HIGH);
     delayMicroseconds(motorSpeed);
-    PORTD = B00000000;
+    digitalWrite(_motorPin, LOW);
+    delayMicroseconds(motorSpeed);
     _position--;
     interrupts();
 
 
+
 }
+
+void Stepper::moveBackward(int motorSpeed) {
+    
+    noInterrupts();
+    digitalWrite(_dirPin, LOW);
+    digitalWrite(_motorPin, HIGH);
+    delayMicroseconds(motorSpeed);
+    digitalWrite(_motorPin, LOW);
+    delayMicroseconds(motorSpeed);
+    _position++;
+    interrupts();
+}
+
+
+
 
 void Stepper::moveSteps(long numSteps, int motorSpeed) {
     for (long i = 0 ; i < numSteps; i++) {
@@ -61,6 +71,29 @@ void Stepper::moveSteps(long numSteps, int motorSpeed) {
         _position++;
         interrupts();
     }
+}
+
+void Stepper::setUpperBound() {
+    _upperStopBound = _position;
+}
+
+void Stepper::clearUpperBound() {
+    _upperStopBound = 99999999999999999;
+}
+
+long Stepper::returnUpperBound() {
+    return _upperStopBound;
+}
+
+void Stepper::setLowerBound() {
+    _lowerStopBound = _position;
+}
+void Stepper::clearLowerBound() {
+    _lowerStopBound = -99999999999999999;
+}
+
+long Stepper::returnLowerBound() {
+    return _lowerStopBound;
 }
 
 long Stepper::returnPostion() {
